@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1001</width>
-    <height>569</height>
+    <width>1131</width>
+    <height>566</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>0</y>
-      <width>211</width>
+      <width>225</width>
       <height>511</height>
      </rect>
     </property>
@@ -55,10 +55,10 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox">
+        <widget class="QComboBox" name="fontComboBox">
          <item>
           <property name="text">
-           <string>TimesNewRoman</string>
+           <string>Courier</string>
           </property>
          </item>
         </widget>
@@ -75,7 +75,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="comboBox_2">
+        <widget class="QComboBox" name="palletComboBox">
          <item>
           <property name="text">
            <string>Default</string>
@@ -95,7 +95,11 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spinBox"/>
+        <widget class="QSpinBox" name="spin_box_width">
+         <property name="maximum">
+          <number>200</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
@@ -109,12 +113,23 @@
         </widget>
        </item>
        <item>
-        <widget class="QSpinBox" name="spinBox_2"/>
+        <widget class="QSpinBox" name="spin_box_height">
+         <property name="maximum">
+          <number>200</number>
+         </property>
+        </widget>
        </item>
       </layout>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QPushButton" name="autoSizesButton">
+         <property name="text">
+          <string>Auto sizes</string>
+         </property>
+        </widget>
+       </item>
        <item>
         <widget class="QLabel" name="label_6">
          <property name="text">
@@ -123,7 +138,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox">
+        <widget class="QCheckBox" name="proportionalCheckBox">
          <property name="text">
           <string/>
          </property>
@@ -174,7 +189,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="horizontalSlider">
+      <widget class="QSlider" name="contrastSlider">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -188,7 +203,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="horizontalSlider_2">
+      <widget class="QSlider" name="opasitySlider">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -202,7 +217,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="horizontalSlider_3">
+      <widget class="QSlider" name="brightnessSlider">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
@@ -211,14 +226,21 @@
      <item>
       <widget class="QLabel" name="label_12">
        <property name="text">
-        <string>Saturation</string>
+        <string>Blur</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QSlider" name="horizontalSlider_4">
+      <widget class="QSlider" name="blurSlider">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="resetImageButton">
+       <property name="text">
+        <string>Reset image settings</string>
        </property>
       </widget>
      </item>
@@ -232,9 +254,12 @@
         </widget>
        </item>
        <item>
-        <widget class="QCheckBox" name="checkBox_2">
+        <widget class="QCheckBox" name="displayCheckBox">
          <property name="text">
           <string/>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>
@@ -242,42 +267,69 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="verticalLayoutWidget_2">
+   <widget class="QTextBrowser" name="ascii_output">
     <property name="geometry">
      <rect>
-      <x>249</x>
-      <y>5</y>
-      <width>741</width>
-      <height>471</height>
+      <x>660</x>
+      <y>10</y>
+      <width>451</width>
+      <height>451</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_8">
-       <item>
-        <widget class="QLabel" name="label_15">
-         <property name="text">
-          <string>Your image</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_14">
-         <property name="text">
-          <string>ASCII art</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_9">
-       <item>
-        <widget class="QTextEdit" name="textEdit"/>
-       </item>
-      </layout>
-     </item>
-    </layout>
+    <property name="font">
+     <font>
+      <family>Courier</family>
+      <pointsize>6</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="image_art">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>10</y>
+      <width>401</width>
+      <height>451</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="convert_button">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>472</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Convert</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="autoConvertCheckBox">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>480</y>
+      <width>70</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Auto</string>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+    <property name="tristate">
+     <bool>false</bool>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -285,7 +337,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1001</width>
+     <width>1131</width>
      <height>21</height>
     </rect>
    </property>
@@ -293,87 +345,75 @@
     <property name="title">
      <string>Load</string>
     </property>
-    <addaction name="actionLoad_image"/>
-    <addaction name="actionPallet"/>
-    <addaction name="actionPallets_db"/>
+    <addaction name="actionLoadImage"/>
+    <addaction name="actionFont"/>
    </widget>
    <widget class="QMenu" name="menuSave">
     <property name="title">
      <string>Save</string>
     </property>
-    <addaction name="actionASCII_art_as_txt"/>
-    <addaction name="actionSave_pallet_as_txt"/>
-    <addaction name="actionPallet_as_db"/>
-    <addaction name="actionCopy_pallet_as_string"/>
+    <addaction name="actionASCIIArtAsTxt"/>
+    <addaction name="actionCopyPalletAsString"/>
+    <addaction name="actionCopy_art_in_buffer"/>
    </widget>
    <widget class="QMenu" name="menuPallets">
     <property name="title">
      <string>Pallets</string>
     </property>
-    <addaction name="actionPallet_editor"/>
-    <addaction name="actionCreate_pallet"/>
-    <addaction name="actionBrowse_pallet"/>
+    <addaction name="actionCreatePallet"/>
+    <addaction name="actionBrowsePallet"/>
    </widget>
    <widget class="QMenu" name="menuMode">
     <property name="title">
      <string>Mode</string>
     </property>
-    <addaction name="actionBrightness_defolt"/>
-    <addaction name="actionLine"/>
+    <addaction name="actionBrightnessMode"/>
+    <addaction name="actionLineMode"/>
    </widget>
-   <widget class="QMenu" name="menuEdit_image">
+   <widget class="QMenu" name="menuEditImage">
     <property name="title">
      <string>Edit image</string>
     </property>
     <addaction name="actionInverting"/>
-    <addaction name="actionHightlight"/>
     <addaction name="actionCrop"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
      <string>Settings</string>
     </property>
-    <addaction name="actionMain_settings"/>
+    <addaction name="actionMainSettings"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
      <string>About</string>
     </property>
-    <addaction name="actionDevelopment_info"/>
-   </widget>
-   <widget class="QMenu" name="menuHelp">
-    <property name="title">
-     <string>Help</string>
-    </property>
-    <addaction name="actionHow_to_use"/>
-    <addaction name="actionFAQ"/>
+    <addaction name="actionDevelopmentInfo"/>
    </widget>
    <addaction name="menuLoad"/>
    <addaction name="menuSave"/>
    <addaction name="menuPallets"/>
    <addaction name="menuMode"/>
-   <addaction name="menuEdit_image"/>
+   <addaction name="menuEditImage"/>
    <addaction name="menuSettings"/>
    <addaction name="menuAbout"/>
-   <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="actionLoad_image">
+  <action name="actionLoadImage">
    <property name="text">
     <string>Image</string>
    </property>
   </action>
-  <action name="actionASCII_art_as_txt">
+  <action name="actionASCIIArtAsTxt">
    <property name="text">
     <string>ASCII art as .txt</string>
    </property>
   </action>
-  <action name="actionBrightness_defolt">
+  <action name="actionBrightnessMode">
    <property name="text">
     <string>Brightness (defalt)</string>
    </property>
   </action>
-  <action name="actionLine">
+  <action name="actionLineMode">
    <property name="text">
     <string>Line</string>
    </property>
@@ -383,9 +423,9 @@
     <string>Inverting</string>
    </property>
   </action>
-  <action name="actionDevelopment_info">
+  <action name="actionDevelopmentInfo">
    <property name="text">
-    <string>Development info</string>
+    <string>GitHub</string>
    </property>
   </action>
   <action name="actionHow_to_use">
@@ -398,17 +438,17 @@
     <string>FAQ</string>
    </property>
   </action>
-  <action name="actionPallet_as_db">
+  <action name="actionPalletAsDb">
    <property name="text">
-    <string>Pallets as db</string>
+    <string>DB</string>
    </property>
   </action>
-  <action name="actionCopy_pallet_as_string">
+  <action name="actionCopyPalletAsString">
    <property name="text">
     <string>Copy pallet as string</string>
    </property>
   </action>
-  <action name="actionSave_pallet_as_txt">
+  <action name="actionSavePalletAsTxt">
    <property name="text">
     <string>Pallet as .txt</string>
    </property>
@@ -418,7 +458,7 @@
     <string>Set pallet</string>
    </property>
   </action>
-  <action name="actionPallet_editor">
+  <action name="actionPalletEditor">
    <property name="text">
     <string>Pallet editor</string>
    </property>
@@ -428,7 +468,7 @@
     <string>Pallet</string>
    </property>
   </action>
-  <action name="actionPallets_db">
+  <action name="actionPalletsDb">
    <property name="text">
     <string>Pallets db</string>
    </property>
@@ -443,19 +483,34 @@
     <string>Crop</string>
    </property>
   </action>
-  <action name="actionCreate_pallet">
+  <action name="actionCreatePallet">
    <property name="text">
     <string>Create pallet</string>
    </property>
   </action>
-  <action name="actionBrowse_pallet">
+  <action name="actionBrowsePallet">
    <property name="text">
-    <string>Browse pallet</string>
+    <string>Browse pallets</string>
    </property>
   </action>
-  <action name="actionMain_settings">
+  <action name="actionMainSettings">
    <property name="text">
-    <string>Main settings</string>
+    <string>Theme</string>
+   </property>
+  </action>
+  <action name="actionFont">
+   <property name="text">
+    <string>Font</string>
+   </property>
+  </action>
+  <action name="actionBrowse_pallets">
+   <property name="text">
+    <string>Browse pallets</string>
+   </property>
+  </action>
+  <action name="actionCopy_art_in_buffer">
+   <property name="text">
+    <string>Copy ASCII art in buffer</string>
    </property>
   </action>
  </widget>
