@@ -141,20 +141,6 @@
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_6">
-       <item>
-        <widget class="QLabel" name="label_7">
-         <property name="text">
-          <string>Symbols per pixels (scale)</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="spinBox_3"/>
-       </item>
-      </layout>
-     </item>
-     <item>
       <widget class="Line" name="line_3">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>

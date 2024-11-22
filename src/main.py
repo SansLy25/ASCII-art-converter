@@ -2,8 +2,8 @@ import sys
 import webbrowser
 
 from PyQt6 import uic
-from PyQt6.QtGui import QPixmap, QImage, QFontDatabase, QFont
-from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, \
+from PyQt6.QtGui import QPixmap, QImage, QFont
+from PyQt6.QtWidgets import QApplication, QMainWindow, \
     QFileDialog, QMessageBox, QDialog
 
 from PyQt6 import QtCore
