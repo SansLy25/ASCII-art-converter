@@ -12,8 +12,7 @@ import pyperclip
 
 from property import Art
 from db_classes import Database
-from other_windows import CropDialog, PaletteCreateDialog
-from src.other_windows import PaletteManager
+from other_windows import CropDialog, PaletteCreateDialog, PaletteManager
 
 DEFAULT_PALETTE = '@%&#*/(,. '
 
