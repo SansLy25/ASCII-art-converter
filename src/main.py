@@ -1,4 +1,5 @@
 import sys
+import webbrowser
 
 from PyQt6 import uic
 from PyQt6.QtGui import QPixmap, QImage, QFontDatabase, QFont
@@ -7,12 +8,14 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, \
 
 from PyQt6 import QtCore
 from PIL import Image
+import pyperclip
 
 from property import Art
 from db_classes import Database
-from other_windows import CropDialog, PalletCreateDialog
+from other_windows import CropDialog, PaletteCreateDialog
+from src.other_windows import PaletteManager
 
-DEFAULT_PAllET = '@%&#*/(,. '
+DEFAULT_PALETTE = '@%&#*/(,. '
 
 
 class MainWindow(QMainWindow):
@@ -27,7 +30,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle('ASCII Art Converter')
         self.db = Database()
 
-        self.pallet = DEFAULT_PAllET
+        self.palette = DEFAULT_PALETTE
         self.pixmap = QPixmap('')
 
         self.actionLoadImage.triggered.connect(self.load_image)
@@ -35,13 +38,18 @@ class MainWindow(QMainWindow):
         self.actionInverting.triggered.connect(self.invert_action_handler)
         self.actionCrop.triggered.connect(self.crop_action_handler)
         self.actionLineMode.triggered.connect(self.set_line_mode)
-        self.actionCreatePallet.triggered.connect(self.create_pallet)
+        self.actionCreatepalette.triggered.connect(self.create_palette)
+        self.actionBrowsepalette.triggered.connect(self.browse_palette)
+        self.actionASCIIArtAsTxt.triggered.connect(self.save_ascii)
+        self.actionCopypaletteAsString.triggered.connect(self.copy_palette)
+        self.actionCopyArtInBuffer.triggered.connect(self.copy_ascii)
+        self.actionDevelopmentInfo.triggered.connect(self.open_github)
 
         self.convert_button.clicked.connect(self.convert_btn_handler)
         self.proportionalCheckBox.clicked.connect(self.proportional_handler)
         self.autoSizesButton.clicked.connect(self.set_auto_sizes_handler)
-        self.inverting = False
 
+        self.inverting = False
         self.filename = None
         self.original_image = None
         self.art = None
@@ -64,9 +72,10 @@ class MainWindow(QMainWindow):
 
         self.resetImageButton.clicked.connect(self.image_reset_handler)
         self.populate_font_combo_box()
-        self.populate_pallet_combo_box()
+        self.populate_palette_combo_box()
         self.fontComboBox.currentIndexChanged.connect(self.font_change_handler)
-        self.palletComboBox.currentIndexChanged.connect(self.pallet_change_handler)
+        self.paletteComboBox.currentIndexChanged.connect(
+            self.palette_change_handler)
 
     def effect_handler(self):
         """
@@ -77,7 +86,7 @@ class MainWindow(QMainWindow):
         self.art = Art(self.original_image)
         self.art.apply_brightness(self.brightnessSlider.value())
         self.art.apply_contrast(self.contrastSlider.value())
-        self.art.apply_transparency(self.opasitySlider.value())
+        self.art.apply_sharpness(self.opasitySlider.value())
         self.art.apply_blur(self.blurSlider.value())
 
         self.set_image()
@@ -179,7 +188,8 @@ class MainWindow(QMainWindow):
             height = self.spin_box_height.value() if self.spin_box_height.value() > 0 else None
 
             self.ascii_output.setText(
-                self.art.convert(20, 10, self.pallet, height, width, mode=self.mode))
+                self.art.convert(20, 10, self.palette, height, width,
+                                 mode=self.mode))
 
     def populate_font_combo_box(self):
         """Заполняет fontComboBox шрифтами из базы данных"""
@@ -188,20 +198,23 @@ class MainWindow(QMainWindow):
             font_name = font[1]
             self.fontComboBox.addItem(font_name)
 
-    def populate_pallet_combo_box(self):
-        """Заполняет pallete ComboBox палитрами из базы данных"""
-        pallets = self.db.get_pallets()
-        for pallet in pallets:
-            self.palletComboBox.addItem(pallet[2])
+    def populate_palette_combo_box(self):
+        """Заполняет paletteComboBox палитрами из базы данных"""
+        palettes = self.db.get_palettes()
+        self.paletteComboBox.addItem('Default')
 
-    def pallet_change_handler(self):
+        for palette in palettes:
+            if palette[2] != 'Default':
+                self.paletteComboBox.addItem(palette[2])
+
+    def palette_change_handler(self):
         """
         Смена палитры
         """
-        pallet_name = self.palletComboBox.currentText()
-        pallet = self.db.get_pallet_string_by_name(pallet_name)[0]
-        self.pallet = pallet[0]
-
+        palette_name = self.paletteComboBox.currentText()
+        if palette_name:
+            palette = self.db.get_palette_string_by_name(palette_name)[0]
+            self.palette = palette[0]
 
     def font_change_handler(self):
         """Обрабатывает изменение выбранного шрифта в fontComboBox"""
@@ -257,8 +270,8 @@ class MainWindow(QMainWindow):
         Открывает диалоговое окно для обрезки изображения и применяет изменения.
         """
         if not self.original_image:
-            QMessageBox.warning(self, "Ошибка",
-                                "Сначала загрузите изображение!")
+            QMessageBox.warning(self, 'Ошибка',
+                                'Сначала загрузите изображение!')
             return
 
         crop_dialog = CropDialog(self)
@@ -277,26 +290,74 @@ class MainWindow(QMainWindow):
             self.art = Art(self.original_image)
             self.set_image()
 
-    def create_pallet(self):
+    def create_palette(self):
         """
         Создания палитры с помощью отдельного диалога
         """
-        pallet_dialog = PalletCreateDialog(self)
+        palette_dialog = PaletteCreateDialog(self)
 
-        if pallet_dialog.exec() == QDialog.DialogCode.Accepted:
+        if palette_dialog.exec() == QDialog.DialogCode.Accepted:
 
-            pallet_name, pallet_as_string = pallet_dialog.get_values()
-            if not self.db.get_pallet_string_by_name(pallet_name):
-                self.db.create_pallet(
-                    pallet_name,
-                    pallet_as_string,
+            palette_name, palette_as_string = palette_dialog.get_values()
+            if not self.db.get_palette_string_by_name(palette_name):
+                self.db.create_palette(
+                    palette_name,
+                    palette_as_string,
                 )
-                self.palletComboBox.clear()
-                self.populate_pallet_combo_box()
+                self.paletteComboBox.clear()
+                self.populate_palette_combo_box()
             else:
-                pallet_dialog.set_error(
-                    'ПАЛИТРА С ТАКИМ ИМЕНЕМ УЖЕ СУЩЕСТВУЕТ')
+                QMessageBox.warning(self, 'Ошибка',
+                                    'Палитра с таким именем уже существует')
 
+    def browse_palette(self):
+        """Открывает диалог для просмотра и удаления палитр"""
+        manager_dialog = PaletteManager(self)
+        manager_dialog.exec()
+        self.paletteComboBox.clear()
+        self.populate_palette_combo_box()
+
+    def copy_palette(self):
+        """Копирует палитру в буфер обмена"""
+        pyperclip.copy(self.palette)
+        QMessageBox.information(self, 'Успех', 'Скопировано')
+
+    def copy_ascii(self):
+        """Копирует арт в буфер обмена"""
+        pyperclip.copy(self.ascii_output.toPlainText())
+        QMessageBox.information(self, 'Успех', 'Скопировано')
+
+    def save_ascii(self):
+        """
+        Сохраняет строку в текстовый файл в указанное пользователем место.
+        """
+        if not self.ascii_output.toPlainText():
+            QMessageBox.warning(self, "Ошибка", "Нет данных для сохранения.")
+            return
+
+        file_path, _ = QFileDialog.getSaveFileName(
+            self,
+            "Сохранить ASCII-арт",
+            "",
+            "Text Files (*.txt);;All Files (*)"
+        )
+
+        if file_path:
+            try:
+                with open(file_path, 'w', encoding='utf-8') as file:
+                    file.write(self.ascii_output.toPlainText())
+                QMessageBox.information(self, "Успех",
+                                        f"Файл успешно сохранён в {file_path}")
+            except Exception as e:
+                QMessageBox.critical(self, "Ошибка",
+                                     f"Не удалось сохранить файл: {e}")
+
+    @staticmethod
+    def open_github():
+        """
+        Открывает проект на GitHub в браузере
+        """
+        webbrowser.open('https://github.com/SansLy25/ASCII-art-converter')
 
 
 def except_hook(cls, exception, traceback):
@@ -305,6 +366,7 @@ def except_hook(cls, exception, traceback):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setStyle("Fusion")
     window = MainWindow()
     window.show()
     sys.excepthook = except_hook

@@ -69,7 +69,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="palletEdit">
+     <widget class="QLineEdit" name="paletteEdit">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -77,7 +77,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QLabel" name="label_3">
+  <widget class="QLabel" name="errorLabel">
    <property name="geometry">
     <rect>
      <x>70</x>

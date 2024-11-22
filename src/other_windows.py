@@ -1,12 +1,14 @@
 from PyQt6 import uic
-from PyQt6.QtWidgets import QDialog, QVBoxLayout, QHBoxLayout, QLabel, \
-    QSpinBox, QPushButton, QWidget
+from PyQt6.QtWidgets import QDialog, QMessageBox, QTableWidgetItem
+
+from db_classes import Database
 
 
 class CropDialog(QDialog):
     """
     Диалоговое окно для ввода параметров обрезки изображения.
     """
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Image crop")
@@ -27,33 +29,72 @@ class CropDialog(QDialog):
             self.rightSpinBox.value(),
         )
 
-class PalletCreateDialog(QDialog):
+
+class PaletteCreateDialog(QDialog):
     """
     Окно для создания палитры
     """
 
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setWindowTitle('Pallet Creator')
+        self.setWindowTitle('palette Creator')
 
-        uic.loadUi('../designs/pallet_creator.ui', self)
+        uic.loadUi('../designs/palette_creator.ui', self)
 
     def get_values(self):
         """
-        Получения значени для последующего занесения в бд
+        Получения значения для последующего занесения в бд
         """
         return (
             self.nameEdit.text(),
-            self.palletEdit.text(),
+            self.paletteEdit.text(),
         )
 
-    def set_error(self, error_text):
-        """
-        Просто установка ошибок
-        """
-        self.errorLabel.setText(error_text)
 
-
-class BrowsePallets(QWidget):
+class PaletteManager(QDialog):
     def __init__(self, parent=None):
-        self.setWindowTitle('Browse Pallets')
+        """
+        Окно управления палитрами
+        """
+        super().__init__(parent)
+        uic.loadUi('../designs/palette_manager.ui', self)
+        print('asda')
+        self.db = Database()
+
+        self.deleteButton.clicked.connect(self.delete_selected_palette)
+        self.closeButton.clicked.connect(self.close)
+
+        self.load_palettes()
+
+    def load_palettes(self):
+        """Загружает палитры из базы данных и отображает их в таблице"""
+        self.tableWidget.setRowCount(0)
+        palettes = self.db.get_palettes()
+
+        for row, palette in enumerate(palettes):
+            self.tableWidget.insertRow(row)
+            self.tableWidget.setItem(row, 0, QTableWidgetItem(palette[2]))
+            self.tableWidget.setItem(row, 1, QTableWidgetItem(palette[1]))
+
+    def delete_selected_palette(self):
+        """Удаляет выбранную палитру из базы данных и таблицы"""
+        selected_row = self.tableWidget.currentRow()
+        if selected_row == -1:
+            QMessageBox.warning(self, 'Ошибка',
+                                'Выберите палитру для удаления.')
+            return
+
+        palette_name = self.tableWidget.item(selected_row, 0).text()
+        confirm = QMessageBox.question(
+            self,
+            'Подтверждение удаления',
+            f'Вы уверены, что хотите удалить палитру "{palette_name}"?',
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+        )
+
+        if confirm == QMessageBox.StandardButton.Yes:
+            self.db.delete_palette_by_name(palette_name)
+
+            self.tableWidget.removeRow(selected_row)
+            QMessageBox.information(self, 'Успех',
+                                    f'Палитра "{palette_name}" была удалена.')

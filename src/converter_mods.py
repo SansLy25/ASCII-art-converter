@@ -2,15 +2,15 @@ import numpy as np
 import cv2
 
 
-def image_to_ascii_brightness_mod(image, inverse, pallet):
+def image_to_ascii_brightness_mod(image, inverse, palette):
     """
     Режим конвертации, использует простую яркость пикселей, чтобы определить
     какому символу палитры он соответствует
     """
     if inverse:
-        pallet = pallet[::-1]
+        palette = palette[::-1]
     else:
-        pallet = pallet
+        palette = palette
 
     pixels = image.load()
     art_string = ''
@@ -18,8 +18,8 @@ def image_to_ascii_brightness_mod(image, inverse, pallet):
     for j in range(image.height):
         for i in range(image.width):
             color = pixels[i, j]
-            pallet_color = max(round((color / 255) * len(pallet) - 1), 0)
-            art_string += pallet[pallet_color]
+            palette_color = max(round((color / 255) * len(palette) - 1), 0)
+            art_string += palette[palette_color]
         art_string += '\n'
 
     return art_string

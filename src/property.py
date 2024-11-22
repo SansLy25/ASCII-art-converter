@@ -1,4 +1,4 @@
-from PIL import Image, ImageFilter
+from PIL import Image, ImageFilter, ImageEnhance
 import numpy as np
 import converter_mods
 
@@ -15,13 +15,12 @@ class Art:
         else:
             self.image = Image.open(image)
 
-
     def convert(self, symb_height, symb_width,
-                pallet,
+                palette,
                 symbols_vertical=None,
                 symbols_horizontal=None,
                 mode='brightness',
-                inverse=False,):
+                inverse=False, ):
 
         """
         Метод конвертации, возвращает строку, представлюящую изображение
@@ -47,10 +46,9 @@ class Art:
         if mode == 'brightness':
             return converter_mods.image_to_ascii_brightness_mod(image_resized,
                                                                 inverse,
-                                                                pallet)
+                                                                palette)
         elif mode == 'line':
             return converter_mods.image_to_ascii_line_mod(image_resized)
-
 
     def apply_contrast(self, value):
         """
@@ -67,20 +65,13 @@ class Art:
             np.uint8)
         self.image = Image.fromarray(result)
 
-    def apply_transparency(self, value):
+    def apply_sharpness(self, value):
         """
-        Регулирует прозрачность изображения через манипуляцию альфа-канала
+        Регулирует резкость изображения
         """
-        if self.image.mode != "RGBA":
-            self.image = self.image.convert("RGBA")
-        alpha = np.array(self.image.split()[-1],
-                         dtype=np.float32)
-        factor = (value - 50) / 50.0 + 1.0
-        new_alpha = np.clip(alpha * factor, 0, 255).astype(
-            np.uint8)  # Масштабируем прозрачность
-        rgba = np.array(self.image, dtype=np.uint8)
-        rgba[:, :, 3] = new_alpha  # Заменяем альфа-канал
-        self.image = Image.fromarray(rgba, "RGBA")
+        enhancer = ImageEnhance.Sharpness(self.image)
+        factor = (((value - 50) / 50.0) * 6) + 1.0
+        self.image = enhancer.enhance(factor)
 
     def apply_brightness(self, value):
         """

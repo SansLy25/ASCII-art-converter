@@ -70,18 +70,12 @@
        <item>
         <widget class="QLabel" name="label_3">
          <property name="text">
-          <string>Pallet</string>
+          <string>Palette</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QComboBox" name="palletComboBox">
-         <item>
-          <property name="text">
-           <string>Default</string>
-          </property>
-         </item>
-        </widget>
+        <widget class="QComboBox" name="paletteComboBox"/>
        </item>
       </layout>
      </item>
@@ -198,7 +192,7 @@
      <item>
       <widget class="QLabel" name="label_10">
        <property name="text">
-        <string>Opasity</string>
+        <string>Sharpness</string>
        </property>
       </widget>
      </item>
@@ -346,22 +340,21 @@
      <string>Load</string>
     </property>
     <addaction name="actionLoadImage"/>
-    <addaction name="actionFont"/>
    </widget>
    <widget class="QMenu" name="menuSave">
     <property name="title">
      <string>Save</string>
     </property>
     <addaction name="actionASCIIArtAsTxt"/>
-    <addaction name="actionCopyPalletAsString"/>
-    <addaction name="actionCopy_art_in_buffer"/>
+    <addaction name="actionCopypaletteAsString"/>
+    <addaction name="actionCopyArtInBuffer"/>
    </widget>
-   <widget class="QMenu" name="menuPallets">
+   <widget class="QMenu" name="menupalettes">
     <property name="title">
-     <string>Pallets</string>
+     <string>Palette</string>
     </property>
-    <addaction name="actionCreatePallet"/>
-    <addaction name="actionBrowsePallet"/>
+    <addaction name="actionCreatepalette"/>
+    <addaction name="actionBrowsepalette"/>
    </widget>
    <widget class="QMenu" name="menuMode">
     <property name="title">
@@ -377,12 +370,6 @@
     <addaction name="actionInverting"/>
     <addaction name="actionCrop"/>
    </widget>
-   <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>Settings</string>
-    </property>
-    <addaction name="actionMainSettings"/>
-   </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
      <string>About</string>
@@ -391,10 +378,9 @@
    </widget>
    <addaction name="menuLoad"/>
    <addaction name="menuSave"/>
-   <addaction name="menuPallets"/>
+   <addaction name="menupalettes"/>
    <addaction name="menuMode"/>
    <addaction name="menuEditImage"/>
-   <addaction name="menuSettings"/>
    <addaction name="menuAbout"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -438,39 +424,39 @@
     <string>FAQ</string>
    </property>
   </action>
-  <action name="actionPalletAsDb">
+  <action name="actionpaletteAsDb">
    <property name="text">
     <string>DB</string>
    </property>
   </action>
-  <action name="actionCopyPalletAsString">
+  <action name="actionCopypaletteAsString">
    <property name="text">
-    <string>Copy pallet as string</string>
+    <string>Copy palette as string</string>
    </property>
   </action>
-  <action name="actionSavePalletAsTxt">
+  <action name="actionSavepaletteAsTxt">
    <property name="text">
-    <string>Pallet as .txt</string>
+    <string>palette as .txt</string>
    </property>
   </action>
-  <action name="actionSet_pallet">
+  <action name="actionSet_palette">
    <property name="text">
-    <string>Set pallet</string>
+    <string>Set palette</string>
    </property>
   </action>
-  <action name="actionPalletEditor">
+  <action name="actionpaletteEditor">
    <property name="text">
-    <string>Pallet editor</string>
+    <string>palette editor</string>
    </property>
   </action>
-  <action name="actionPallet">
+  <action name="actionpalette">
    <property name="text">
-    <string>Pallet</string>
+    <string>palette</string>
    </property>
   </action>
-  <action name="actionPalletsDb">
+  <action name="actionpalettesDb">
    <property name="text">
-    <string>Pallets db</string>
+    <string>palettes db</string>
    </property>
   </action>
   <action name="actionHightlight">
@@ -483,14 +469,14 @@
     <string>Crop</string>
    </property>
   </action>
-  <action name="actionCreatePallet">
+  <action name="actionCreatepalette">
    <property name="text">
-    <string>Create pallet</string>
+    <string>Create palette</string>
    </property>
   </action>
-  <action name="actionBrowsePallet">
+  <action name="actionBrowsepalette">
    <property name="text">
-    <string>Browse pallets</string>
+    <string>Browse palettes</string>
    </property>
   </action>
   <action name="actionMainSettings">
@@ -503,12 +489,12 @@
     <string>Font</string>
    </property>
   </action>
-  <action name="actionBrowse_pallets">
+  <action name="actionBrowse_palettes">
    <property name="text">
-    <string>Browse pallets</string>
+    <string>Browse palettes</string>
    </property>
   </action>
-  <action name="actionCopy_art_in_buffer">
+  <action name="actionCopyArtInBuffer">
    <property name="text">
     <string>Copy ASCII art in buffer</string>
    </property>

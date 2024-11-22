@@ -13,9 +13,9 @@ class Database:
         self.cursor = self.connection.cursor()
 
         self.cursor.execute('''
-            CREATE TABLE IF NOT EXISTS pallet (
+            CREATE TABLE IF NOT EXISTS palette (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                pallet_string TEXT NOT NULL,
+                palette_string TEXT NOT NULL,
                 name TEXT NOT NULL
             )
         ''')
@@ -65,24 +65,32 @@ class Database:
         self.cursor.execute("SELECT * FROM font")
         return self.cursor.fetchall()
 
-    def get_pallets(self):
+    def get_palettes(self):
         """Возвращает список всех палитр"""
-        self.cursor.execute("SELECT * FROM pallet")
+        self.cursor.execute("SELECT * FROM palette")
         return self.cursor.fetchall()
 
     def get_fonts_by_name(self, name):
-        """Возвращает шрифт по имени из таблицы font."""
+        """Возвращает шрифт по имени из таблицы font"""
         self.cursor.execute("SELECT * FROM font WHERE name = ?", (name,))
         return self.cursor.fetchall()
 
-    def get_pallet_string_by_name(self, name):
-        self.cursor.execute("SELECT pallet_string FROM pallet WHERE name = ?", (name,))
+    def get_palette_string_by_name(self, name):
+        """Получение палитры в виде строки из таблицы pallets по имени"""
+        self.cursor.execute(
+            "SELECT palette_string FROM palette WHERE name = ?", (name,))
         return self.cursor.fetchall()
 
-    def create_pallet(self, name, pallet_string):
+    def create_palette(self, name, palette_string):
+        """Создание палитры"""
         self.cursor.execute(
-            "INSERT INTO pallet (name, pallet_string) VALUES (?, ?)",
-            (name, pallet_string))
+            "INSERT INTO palette (name, palette_string) VALUES (?, ?)",
+            (name, palette_string))
+        self.connection.commit()
+
+    def delete_palette_by_name(self, name):
+        """Удаление палитры"""
+        self.cursor.execute("DELETE FROM palette WHERE name = ?", (name,))
         self.connection.commit()
 
     def close(self):
